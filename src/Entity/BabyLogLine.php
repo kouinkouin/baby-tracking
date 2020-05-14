@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\BabyLogLineRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BabyLogLineRepository::class)
@@ -21,21 +22,29 @@ class BabyLogLine
     /**
      * @ORM\ManyToOne(targetEntity=Baby::class, inversedBy="logLines")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\NotNull()
      */
     private ?Baby $baby;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     *
+     * @Assert\NotBlank()
      */
     private ?DateTimeImmutable $creationDatetime;
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @Assert\NotBlank()
      */
     private ?int $typeId;
 
     /**
      * @ORM\Column(type="json")
+     *
+     * @Assert\NotBlank()
      */
     private array $data = [];
 
