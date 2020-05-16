@@ -42,7 +42,7 @@ class Baby
     /**
      * @ORM\OneToMany(targetEntity=BabyLogLine::class, mappedBy="baby", orphanRemoval=true)
      */
-    private $logLines;
+    private Collection $logLines;
 
     public function __construct()
     {
