@@ -1,11 +1,5 @@
 var Encore = require('@symfony/webpack-encore');
 
-// Manually configure the runtime environment if not already configured yet by the "encore" command.
-// It's useful when you use tools that rely on webpack.config.js file.
-if (!Encore.isRuntimeEnvironmentConfigured()) {
-    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
-}
-
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
@@ -26,6 +20,7 @@ Encore
     .addEntry('app', './assets/js/app.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
+    .addStyleEntry('css', './assets/css/app.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -34,6 +29,15 @@ Encore
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
 
+    .copyFiles({
+        from: './assets/images',
+
+        // optional target path, relative to the output dir
+        to: 'images/[path][name].[ext]',
+
+        // only copy files matching this pattern
+        //pattern: /\.(png|jpg|jpeg)$/
+    })
     /*
      * FEATURE CONFIG
      *
@@ -69,6 +73,8 @@ Encore
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
+
+    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -4,6 +4,16 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
+
+        {% for css in encore_entry_css_files('css') %}
+            <link rel="stylesheet" href="{{ preload(asset(css), { as: 'style' }) }}">
+        {% endfor %}
+
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+        {% for js in encore_entry_js_files('app') %}
+            <script src="{{ preload(asset(js)) }}" type="text/javascript" defer="defer"></script>
+        {% endfor %}
     </head>
     <body>
         {% block body %}{% endblock %}
