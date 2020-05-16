@@ -22,6 +22,12 @@ class Baby
     private ?string $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="babies")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private ?User $user;
+
+    /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      */
@@ -46,6 +52,18 @@ class Baby
     public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     public function getName(): ?string
