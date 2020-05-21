@@ -11,6 +11,8 @@ import '../css/app.css';
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
+import "bootstrap";
+
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";

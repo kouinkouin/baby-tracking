@@ -5,6 +5,8 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
 
+        <link rel="stylesheet" media="screen" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"/>
+
         {% for css in encore_entry_css_files('css') %}
             <link rel="stylesheet" href="{{ preload(asset(css), { as: 'style' }) }}">
         {% endfor %}
