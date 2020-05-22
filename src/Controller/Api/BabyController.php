@@ -82,7 +82,8 @@ class BabyController extends AbstractController
         $editedBaby = $this->serializer->deserialize($request->getContent(), Baby::class, 'json');
         $baby
             ->setName($editedBaby->getName())
-            ->setBirthDatetime($editedBaby->getBirthDatetime());
+            ->setBirthDatetime($editedBaby->getBirthDatetime())
+        ;
 
         $errors = $this->validator->validate($baby);
 

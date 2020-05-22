@@ -28,6 +28,7 @@ class BabyLogLineRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->setParameter('user', $user)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+            ;
     }
 }
