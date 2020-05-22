@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Baby;
+use App\Entity\BabyLogLine;
 use App\Repository\BabyLogLineRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class LogController extends AbstractController
@@ -15,10 +19,16 @@ class LogController extends AbstractController
 
     private BabyLogLineRepository $babyLogLineRepository;
 
-    public function __construct(UserRepository $userRepository, BabyLogLineRepository $babyLogLineRepository)
-    {
+    private EntityManagerInterface $em;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        UserRepository $userRepository,
+        BabyLogLineRepository $babyLogLineRepository
+    ) {
         $this->userRepository = $userRepository;
         $this->babyLogLineRepository = $babyLogLineRepository;
+        $this->em = $em;
     }
 
     /**
@@ -28,10 +38,17 @@ class LogController extends AbstractController
     {
         $username = $request->getUser();
         $user = $this->userRepository->findOneByUsername($username);
+        $babies = $user->getBabies();
+        if ($babies->isEmpty()) {
+            return new Response('You need almost one baby registered (and there is not controller for that yet!)', 500);
+        }
+
+        if ($request->getMethod() === 'POST') {
+            $this->treatAdd($request);
+        }
 
         $lastBabyLogLine = $this->babyLogLineRepository->findOneLastByUser($user);
 
-        $babies = $user->getBabies();
         $preselectedBabyId = $lastBabyLogLine ? $lastBabyLogLine->getBaby()->getId() : $babies->first()->getId();
 
         $logTypes = [
@@ -53,5 +70,24 @@ class LogController extends AbstractController
                 'now' => $now,
             ]
         );
+    }
+
+    private function treatAdd(Request $request)
+    {
+        $babyId = $request->request->get('baby');
+        /** @var Baby $baby */
+        $baby = $this->em->getPartialReference(Baby::class, $babyId);
+
+        $when = DateTimeImmutable::createFromFormat('d/m/Y H:i', $request->request->get('datetime')) ?: null;
+
+        $logLine = (new BabyLogLine)
+            ->setBaby($baby)
+            ->setCreationDatetime($when)
+            ->setTypeId($request->request->getInt('log_type'))
+            ->setData(['value' => $request->request->get('data')])
+        ;
+
+        $this->em->persist($logLine);
+        $this->em->flush();
     }
 }
