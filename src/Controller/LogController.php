@@ -44,7 +44,7 @@ class LogController extends AbstractController
         }
 
         if ($request->getMethod() === 'POST') {
-            $this->treatAdd($request);
+            return $this->treatAdd($request);
         }
 
         $lastBabyLogLine = $this->babyLogLineRepository->findOneLastByUser($user);
@@ -89,5 +89,7 @@ class LogController extends AbstractController
 
         $this->em->persist($logLine);
         $this->em->flush();
+
+        return $this->redirectToRoute('log_add');
     }
 }
