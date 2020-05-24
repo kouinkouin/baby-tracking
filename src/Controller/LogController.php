@@ -15,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LogController extends AbstractController
 {
+    private const FORMAT_DATETIME_LOCAL = 'Y-m-d\TH:i';
+
     private UserRepository $userRepository;
 
     private BabyLogLineRepository $babyLogLineRepository;
@@ -40,7 +42,7 @@ class LogController extends AbstractController
         $user = $this->userRepository->findOneByUsername($username);
         $babies = $user->getBabies();
         if ($babies->isEmpty()) {
-            return new Response('You need almost one baby registered (and there is not controller for that yet!)', 500);
+            return new Response('You need almost one baby registered (and there is not URL for that yet!)', 500);
         }
 
         if ($request->getMethod() === 'POST') {
@@ -58,7 +60,7 @@ class LogController extends AbstractController
         ];
         $preselectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
 
-        $now = (new DateTimeImmutable)->format('d/m/Y H:i');
+        $now = (new DateTimeImmutable)->format(self::FORMAT_DATETIME_LOCAL);
 
         return $this->render(
             'log/add.html.twig',
@@ -78,7 +80,10 @@ class LogController extends AbstractController
         /** @var Baby $baby */
         $baby = $this->em->getPartialReference(Baby::class, $babyId);
 
-        $when = DateTimeImmutable::createFromFormat('d/m/Y H:i', $request->request->get('datetime')) ?: null;
+        $when = DateTimeImmutable::createFromFormat(
+            self::FORMAT_DATETIME_LOCAL,
+            $request->request->get('datetime')
+        ) ?: null;
 
         $logLine = (new BabyLogLine)
             ->setBaby($baby)
