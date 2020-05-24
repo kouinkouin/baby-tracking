@@ -1,4 +1,4 @@
 <template>
-    <div>titi</div>
+    <div>Home page</div>
 </template>
 

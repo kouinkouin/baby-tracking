@@ -12,14 +12,6 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-        return $this->redirectToRoute('log_add');
-    }
-
-    /**
-     * @Route("/vue", name="vue_entry")
-     */
-    public function vue()
-    {
-        return $this->render('home/vue.html.twig');
+        return $this->render('home/index.html.twig');
     }
 }
