@@ -10,6 +10,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
+        "dev-server-hot": "encore dev-server --hot",
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
@@ -19,8 +20,8 @@
         "axios": "^0.19.2",
         "bootstrap": "^4.5.0",
         "bootstrap-vue": "^2.14.0",
-        "jquery": "^3.5.1",
         "vue": "^2.6.11",
+        "vue-router": "^3.2.0",
         "vuex": "^3.4.0"
     }
 }

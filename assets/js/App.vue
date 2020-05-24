@@ -1,21 +1,17 @@
 <template>
-    <div id="app">
+    <div>
         <Header/>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-lg-2"></div>
-            </div>
-        </div>
+        <b-container class="mt-3">
+            <router-view></router-view>
+        </b-container>
     </div>
 </template>
 
 <script>
     import Header from './components/global/Header';
+
     export default {
-        data() {
-            return {};
-        },
-        name: 'app',
+        name: "app",
         components: {
             Header
         }
