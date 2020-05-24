@@ -1,3 +1,4 @@
 <template>
-    <h1>titi</h1>
+    <div>titi</div>
 </template>
+

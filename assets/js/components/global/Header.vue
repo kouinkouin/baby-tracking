@@ -1,26 +1,16 @@
 <template>
-    <h1>toto</h1>
+    <b-navbar variant="dark" type="dark">
+        <b-container>
+            <b-navbar-brand href="#">Baby Tracker</b-navbar-brand>
+
+            <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+            <b-collapse id="nav-collapse" is-nav>
+                <b-navbar-nav>
+                    <b-nav-item :to="{name:'home'}">Home</b-nav-item>
+                    <b-nav-item :to="{name: 'add'}">Add</b-nav-item>
+                </b-navbar-nav>
+            </b-collapse>
+        </b-container>
+    </b-navbar>
 </template>
-
-<script>
-    import {mapGetters} from 'vuex';
-
-    export default {
-        components: {},
-        data() {
-            return {
-                term: '',
-                results: [],
-                searched: false,
-                isLoadingSearch: false
-            }
-        },
-        computed: {
-            ...mapGetters('security', [
-                'isAuthenticated',
-                'isLoading'
-            ])
-        },
-        methods: {}
-    }
-</script>
