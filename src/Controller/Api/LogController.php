@@ -51,24 +51,98 @@ class LogController extends AbstractController
 
         $lastBabyLogLine = $this->babyLogLineRepository->findOneLastByUser($user);
 
-        $preselectedBabyId = $lastBabyLogLine ? $lastBabyLogLine->getBaby()->getId() : array_key_first($babies);
+        $selectedBabyId = $lastBabyLogLine ? $lastBabyLogLine->getBaby()->getId() : array_key_first($babies);
 
         $logTypes = [
-            ['value' => 1, 'text' => 'Poids', 'icon' => 'fas fa-weight'],
-            ['value' => 2, 'text' => 'Taille', 'icon' => 'fas fa-ruler-combined'],
-            ['value' => 3, 'text' => 'Température', 'icon' => 'fas fa-thermometer'],
+            1 => ['name' => 'Poids', 'icon' => 'fa-weight'],
+            2 => ['name' => 'Taille', 'icon' => 'fa-ruler-combined'],
+            3 => ['name' => 'Température', 'icon' => 'fa-thermometer'],
+            4 => ['name' => 'Tétée', 'icon' => 'fa-lemon'],
+            5 => ['name' => 'Change', 'icon' => 'fa-toilet'],
         ];
-        $preselectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
+        foreach (array_keys($logTypes) as $logTypeId) {
+            $logType = $logTypes[$logTypeId];
+            $logTypes[$logTypeId]['value'] = $logTypeId;
+            $logTypes[$logTypeId]['html'] = sprintf('<i class="fas fa-fw %s"></i>', $logType['icon']);
+            unset($logTypes[$logTypeId]['icon']);
+        }
+        $selectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
 
         $now = (new DateTimeImmutable)->format(self::FORMAT_DATETIME_LOCAL);
+
+        $inputs = [
+            1 => [
+                ['name' => 'weight', 'text' => 'Poids', 'unit' => 'kg', 'type' => 'number'],
+            ],
+            2 => [
+                ['name' => 'size', 'text' => 'Taille', 'unit' => 'cm', 'type' => 'number'],
+            ],
+            3 => [
+                ['name' => 'temperature', 'text' => 'Température', 'unit' => '°C', 'type' => 'number'],
+            ],
+            4 => [
+                [
+                    'name' => 'duration',
+                    'text' => 'Durée',
+                    'type' => 'range',
+                    'unit' => 'minutes',
+                    'min' => 0,
+                    'max' => 20,
+                ],
+                [
+                    'name' => 'side',
+                    'text' => 'Côté',
+                    'type' => 'radio',
+                    'choices' => [
+                        ['text' => 'Droit', 'value' => 'right'],
+                        ['text' => 'Gauche', 'value' => 'left'],
+                        ['text' => 'Les deux', 'value' => 'both'],
+                    ],
+                ],
+                [
+                    'name' => 'end',
+                    'text' => 'Fin',
+                    'type' => 'radio',
+                    'choices' => [
+                        ['text' => 'Assoupi', 'value' => 1],
+                        ['text' => 'Eveillé', 'value' => 2],
+                    ],
+                ],
+            ],
+            5 => [
+                [
+                    'name' => 'poo',
+                    'text' => 'Caca',
+                    'type' => 'radio',
+                    'choices' => [
+                        ['html' => '<i class="fas fa-fw fa-battery-empty"></i>', 'value' => 0],
+                        ['html' => '<i class="fas fa-fw fa-battery-quarter"></i>', 'value' => 1],
+                        ['html' => '<i class="fas fa-fw fa-battery-half"></i>', 'value' => 2],
+                        ['html' => '<i class="fas fa-fw fa-battery-three-quarters"></i>', 'value' => 3],
+                        ['html' => '<i class="fas fa-fw fa-battery-full"></i>', 'value' => 4],
+                        ['html' => '<i class="fas fa-fw fa-fire"></i>', 'value' => 5],
+                    ],
+                ],
+                [
+                    'name' => 'pee',
+                    'text' => 'Pipi',
+                    'type' => 'radio',
+                    'choices' => [
+                        ['html' => '<i class="fas fa-fw fa-tint-slash"></i>', 'value' => 0],
+                        ['html' => '<i class="fas fa-fw fa-tint"></i>', 'value' => 1],
+                    ],
+                ],
+            ],
+        ];
 
         return $this->json(
             [
                 'babies' => $babies,
-                'preselected_baby_id' => $preselectedBabyId,
-                'log_types' => $logTypes,
-                'preselected_log_type_id' => $preselectedLogTypeId,
+                'selectedBabyId' => $selectedBabyId,
+                'logTypes' => $logTypes,
+                'selectedLogTypeId' => $selectedLogTypeId,
                 'now' => $now,
+                'inputs' => $inputs,
             ]
         );
     }
