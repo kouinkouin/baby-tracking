@@ -2,7 +2,7 @@
     <form method="post">
         <b-form-group label="Qui ?">
             <b-form-radio-group
-                    v-model="model.selectedBabyId"
+                    v-model="model.babyId"
                     buttons
                     button-variant="outline-primary"
                     name="baby"
@@ -17,7 +17,7 @@
 
         <b-form-group label="Quoi ?">
             <b-form-radio-group
-                    v-model="model.selectedLogTypeId"
+                    v-model="model.logTypeId"
                     buttons
                     button-variant="outline-primary"
                     size="lg"
@@ -28,7 +28,7 @@
         </b-form-group>
 
         <div class="col-md-12" v-if="inputs">
-            <div v-for="input in inputs[model.selectedLogTypeId]">
+            <div v-for="input in inputs[model.logTypeId]">
                 <div>
                     <div v-if="input.type === 'number'">
                         <div class="input-group">
@@ -95,9 +95,9 @@
                 isLoading: false,
                 isSubmitting: false,
                 model: {
-                    selectedBabyId: null,
-                    selectedLogTypeId: null,
-                    now: null,
+                    babyId: null,
+                    logTypeId: null,
+                    when: null,
                     inputs: []
                 },
             }
@@ -105,10 +105,10 @@
         computed: {
             ...mapGetters('log', [
                 'babies',
-                'selectedBabyId',
+                'babyId',
                 'logTypes',
-                'selectedLogTypeId',
-                'now',
+                'logTypeId',
+                'when',
                 'inputs',
             ]),
         },
@@ -117,10 +117,9 @@
 
             await this.$store.dispatch('log/loadAddFields');
 
-            console.log(this.selectedBabyId);
-            this.model.selectedBabyId = this.selectedBabyId;
-            this.model.selectedLogTypeId = this.selectedLogTypeId;
-            this.model.now = this.now;
+            this.model.babyId = this.babyId;
+            this.model.logTypeId = this.logTypeId;
+            this.model.when = this.when;
 
             this.isLoading = false;
         },
@@ -128,16 +127,16 @@
             async submit(e) {
                 this.isSubmitting = true;
                 const finalInputs = {};
-                for (const input of this.inputs[this.model.selectedLogTypeId]) {
+                for (const input of this.inputs[this.model.logTypeId]) {
                     finalInputs[input.name] = this.model.inputs[input.name];
                 }
                 console.log(finalInputs);
 
                 await this.$store
                         .dispatch('log/postLog', {
-                            babyId: this.model.selectedBabyId,
-                            logTypeId: this.model.selectedLogTypeId,
-                            datetime: this.model.now,
+                            babyId: this.model.babyId,
+                            logTypeId: this.model.logTypeId,
+                            datetime: this.model.when,
                             inputs: finalInputs
                         })
                         .then(e => this.isSubmitting = false)

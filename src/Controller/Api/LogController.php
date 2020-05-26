@@ -33,7 +33,6 @@ class LogController extends AbstractController
     public function fieldsForAdd(Request $request)
     {
         $username = $request->getUser();
-        dump($request);
         $user = $this->userRepository->findOneByUsername($username);
         $babies = [];
         foreach ($user->getBabies() as $baby) {

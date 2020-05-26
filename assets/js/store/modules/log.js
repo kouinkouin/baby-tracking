@@ -1,18 +1,18 @@
 import logApi from '../../api/log';
 
 const UPDATE_BABIES = 'UPDATE_BABIES';
-const UPDATE_SELECTED_BABY_ID = 'UPDATE_SELECTED_BABY_ID';
+const UPDATE_BABY_ID = 'UPDATE_BABY_ID';
 const UPDATE_LOG_TYPES = 'UPDATE_LOG_TYPES';
-const UPDATE_SELECTED_LOG_TYPE_ID = 'UPDATE_SELECTED_LOG_TYPE_ID';
-const UPDATE_NOW = 'UPDATE_NOW';
+const UPDATE_LOG_TYPE_ID = 'UPDATE_LOG_TYPE_ID';
+const UPDATE_WHEN = 'UPDATE_WHEN';
 const UPDATE_INPUTS = 'UPDATE_INPUTS';
 
 const state = {
     babies: [],
-    selectedBabyId: null,
+    babyId: null,
     logTypes: [],
-    selectedLogTypeId: null,
-    now: null,
+    logTypeId: null,
+    when: null,
     inputs: null,
 };
 
@@ -21,10 +21,10 @@ const actions = {
         logApi.getLogAddFields()
             .then(result => {
                 commit(UPDATE_BABIES, result.babies);
-                commit(UPDATE_SELECTED_BABY_ID, result.selectedBabyId);
+                commit(UPDATE_BABY_ID, result.babyId);
                 commit(UPDATE_LOG_TYPES, result.logTypes);
-                commit(UPDATE_SELECTED_LOG_TYPE_ID, result.selectedLogTypeId);
-                commit(UPDATE_NOW, result.now);
+                commit(UPDATE_LOG_TYPE_ID, result.logTypeId);
+                commit(UPDATE_WHEN, result.when);
                 commit(UPDATE_INPUTS, result.inputs);
             });
     },
@@ -37,17 +37,17 @@ const getters = {
     babies(state) {
         return state.babies;
     },
-    selectedBabyId(state) {
-        return state.selectedBabyId;
+    babyId(state) {
+        return state.babyId;
     },
     logTypes(state) {
         return state.logTypes;
     },
-    selectedLogTypeId(state) {
-        return state.selectedLogTypeId;
+    logTypeId(state) {
+        return state.logTypeId;
     },
-    now(state) {
-        return state.now;
+    when(state) {
+        return state.when;
     },
     inputs(state) {
         return state.inputs;
@@ -58,17 +58,17 @@ const mutations = {
     [UPDATE_BABIES](state, value) {
         state.babies = value;
     },
-    [UPDATE_SELECTED_BABY_ID](state, value) {
-        state.selectedBabyId = value;
+    [UPDATE_BABY_ID](state, value) {
+        state.babyId = value;
     },
     [UPDATE_LOG_TYPES](state, value) {
         state.logTypes = value;
     },
-    [UPDATE_SELECTED_LOG_TYPE_ID](state, value) {
-        state.selectedLogTypeId = value;
+    [UPDATE_LOG_TYPE_ID](state, value) {
+        state.logTypeId = value;
     },
-    [UPDATE_NOW](state, value) {
-        state.now = value;
+    [UPDATE_WHEN](state, value) {
+        state.when = value;
     },
     [UPDATE_INPUTS](state, value) {
         state.inputs = value;
