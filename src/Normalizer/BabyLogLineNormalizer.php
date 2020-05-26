@@ -21,7 +21,7 @@ class BabyLogLineNormalizer implements NormalizerInterface
         return $this->normalizer->normalize(
             $object,
             $format,
-            [AbstractNormalizer::IGNORED_ATTRIBUTES => ['logLines']]
+            [AbstractNormalizer::IGNORED_ATTRIBUTES => ['baby']]
         );
     }
 

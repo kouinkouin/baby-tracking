@@ -57,6 +57,7 @@ class LogController extends AbstractController
             ['id' => 1, 'name' => 'Poids', 'icon' => 'fas fa-weight'],
             ['id' => 2, 'name' => 'Taille', 'icon' => 'fas fa-ruler-combined'],
             ['id' => 3, 'name' => 'Température', 'icon' => 'fas fa-thermometer'],
+            ['id' => 4, 'name' => 'Tétée', 'icon' => 'fas fa-lemon'],
         ];
         $preselectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
 
