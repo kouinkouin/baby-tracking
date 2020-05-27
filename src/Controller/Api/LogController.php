@@ -3,10 +3,11 @@
 namespace App\Controller\Api;
 
 use App\Repository\BabyLogLineRepository;
-use App\Repository\UserRepository;
+use App\Services\Helper\UserHelper;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use function array_key_first;
@@ -15,15 +16,15 @@ class LogController extends AbstractController
 {
     private const FORMAT_DATETIME_LOCAL = 'Y-m-d\TH:i';
 
-    private UserRepository $userRepository;
+    private UserHelper $userHelper;
 
     private BabyLogLineRepository $babyLogLineRepository;
 
     public function __construct(
-        UserRepository $userRepository,
+        UserHelper $userHelper,
         BabyLogLineRepository $babyLogLineRepository
     ) {
-        $this->userRepository = $userRepository;
+        $this->userHelper = $userHelper;
         $this->babyLogLineRepository = $babyLogLineRepository;
     }
 
@@ -32,8 +33,9 @@ class LogController extends AbstractController
      */
     public function fieldsForAdd(Request $request)
     {
-        $username = $request->getUser();
-        $user = $this->userRepository->findOneByUsername($username);
+        if (!$user = $this->userHelper->getUserFromRequest($request)) {
+            return $this->json(['errors' => ['you are not logged']], Response::HTTP_UNAUTHORIZED);
+        }
         $babies = [];
         foreach ($user->getBabies() as $baby) {
             $babies[$baby->getId()] = [
