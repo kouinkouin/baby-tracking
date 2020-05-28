@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Throwable;
 
 class BabyLogLineController extends AbstractController
 {
@@ -60,19 +61,31 @@ class BabyLogLineController extends AbstractController
      */
     public function add(Baby $baby, Request $request)
     {
-        /** @var BabyLogLine $babyLogLine */
-        $babyLogLine = $this->serializer->deserialize($request->getContent(), BabyLogLine::class, 'json');
+        try {
+            /** @var BabyLogLine $babyLogLine */
+            $babyLogLine = $this->serializer->deserialize($request->getContent(), BabyLogLine::class, 'json');
 
-        $babyLogLine->setBaby($baby);
+            $babyLogLine->setBaby($baby);
 
-        $errors = $this->validator->validate($babyLogLine);
+            $errors = $this->validator->validate($babyLogLine);
 
-        if (count($errors) > 0) {
-            return $this->json($errors, Response::HTTP_BAD_REQUEST);
+            if (count($errors) > 0) {
+                return $this->json($errors, Response::HTTP_BAD_REQUEST);
+            }
+            $this->em->persist($babyLogLine);
+            $this->em->flush();
+
+            return $this->json($babyLogLine);
+        } catch (Throwable $e) {
+            return $this->json(
+                [
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
-        $this->em->persist($babyLogLine);
-        $this->em->flush();
-
-        return $this->json($babyLogLine);
     }
 }

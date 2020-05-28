@@ -1,5 +1,14 @@
 <template>
     <form method="post">
+        <b-alert v-model="showSuccessAlert" variant="success" dismissible>
+            Sauvé !
+        </b-alert>
+
+        <b-alert v-model="showDangerAlert" variant="danger" dismissible>
+            Oups... une erreur :<br>
+            {{ this.errorMessage }}
+        </b-alert>
+
         <b-form-group label="Qui ?">
             <b-form-radio-group
                     v-model="model.babyId"
@@ -94,6 +103,9 @@
             return {
                 isLoading: false,
                 isSubmitting: false,
+                showSuccessAlert: false,
+                showDangerAlert: false,
+                errorMessage: '',
                 model: {
                     babyId: null,
                     logTypeId: null,
@@ -126,6 +138,10 @@
         methods: {
             async submit(e) {
                 this.isSubmitting = true;
+                this.showSuccessAlert = false;
+                this.showDangerAlert = false;
+                this.errorMessage = '';
+
                 const finalInputs = {};
                 for (const input of this.inputs[this.model.logTypeId]) {
                     finalInputs[input.name] = this.model.inputs[input.name];
@@ -139,7 +155,18 @@
                             datetime: this.model.when,
                             inputs: finalInputs
                         })
-                        .then(e => this.isSubmitting = false)
+                        .then(() => {
+                            for (const input of this.inputs[this.model.logTypeId]) {
+                                this.model.inputs[input.name] = null;
+                            }
+                            this.showSuccessAlert = true;
+                            this.isSubmitting = false;
+                        })
+                        .catch((e) => {
+                            this.errorMessage = e.response.data.message;
+                            this.showDangerAlert = true;
+                            this.isSubmitting = false;
+                        })
                 ;
             },
         }
