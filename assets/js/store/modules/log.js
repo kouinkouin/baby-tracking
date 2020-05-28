@@ -18,7 +18,7 @@ const state = {
 
 const actions = {
     loadAddFields({commit}) {
-        logApi.getLogAddFields()
+        return logApi.getLogAddFields()
             .then(result => {
                 commit(UPDATE_BABIES, result.babies);
                 commit(UPDATE_BABY_ID, result.babyId);
@@ -29,7 +29,7 @@ const actions = {
             });
     },
     postLog({commit, dispatch}, {babyId, logTypeId, datetime, inputs}) {
-        logApi.postLog(babyId, logTypeId, datetime, inputs);
+        return logApi.postLog(babyId, logTypeId, datetime, inputs);
     }
 };
 

@@ -46,7 +46,7 @@ class LogController extends AbstractController
         if (!$babies) {
             return $this->json(
                 ['errors' => ['You need almost one baby registered (and there is not URL for that yet!)']],
-                500
+                Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
@@ -54,6 +54,24 @@ class LogController extends AbstractController
 
         $selectedBabyId = $lastBabyLogLine ? $lastBabyLogLine->getBaby()->getId() : array_key_first($babies);
 
+        $selectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
+
+        $now = (new DateTimeImmutable)->format(self::FORMAT_DATETIME_LOCAL);
+
+        return $this->json(
+            [
+                'babies' => $babies,
+                'selectedBabyId' => $selectedBabyId,
+                'logTypes' => $this->getLogTypes(),
+                'selectedLogTypeId' => $selectedLogTypeId,
+                'now' => $now,
+                'inputs' => $this->getInputs(),
+            ]
+        );
+    }
+
+    private function getLogTypes(): array
+    {
         $logTypes = [
             1 => ['name' => 'Poids', 'icon' => 'fa-weight'],
             2 => ['name' => 'Taille', 'icon' => 'fa-ruler-combined'],
@@ -67,11 +85,13 @@ class LogController extends AbstractController
             $logTypes[$logTypeId]['html'] = sprintf('<i class="fas fa-fw %s"></i>', $logType['icon']);
             unset($logTypes[$logTypeId]['icon']);
         }
-        $selectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
 
-        $now = (new DateTimeImmutable)->format(self::FORMAT_DATETIME_LOCAL);
+        return $logTypes;
+    }
 
-        $inputs = [
+    private function getInputs(): array
+    {
+        return [
             1 => [
                 ['name' => 'weight', 'text' => 'Poids', 'unit' => 'kg', 'type' => 'number'],
             ],
@@ -95,8 +115,8 @@ class LogController extends AbstractController
                     'text' => 'Côté',
                     'type' => 'radio',
                     'choices' => [
-                        ['text' => 'Droit', 'value' => 'right'],
                         ['text' => 'Gauche', 'value' => 'left'],
+                        ['text' => 'Droit', 'value' => 'right'],
                         ['text' => 'Les deux', 'value' => 'both'],
                     ],
                 ],
@@ -107,6 +127,15 @@ class LogController extends AbstractController
                     'choices' => [
                         ['text' => 'Assoupi', 'value' => 1],
                         ['text' => 'Eveillé', 'value' => 2],
+                    ],
+                ],
+                [
+                    'name' => 'regurgitation',
+                    'text' => 'Régurgitation',
+                    'type' => 'radio',
+                    'choices' => [
+                        ['text' => 'Non', 'value' => 0],
+                        ['text' => 'Oui', 'value' => 1],
                     ],
                 ],
             ],
@@ -133,18 +162,16 @@ class LogController extends AbstractController
                         ['html' => '<i class="fas fa-fw fa-tint"></i>', 'value' => 1],
                     ],
                 ],
+                [
+                    'name' => 'regurgitation',
+                    'text' => 'Régurgitation',
+                    'type' => 'radio',
+                    'choices' => [
+                        ['text' => 'Non', 'value' => 0],
+                        ['text' => 'Oui', 'value' => 1],
+                    ],
+                ],
             ],
         ];
-
-        return $this->json(
-            [
-                'babies' => $babies,
-                'selectedBabyId' => $selectedBabyId,
-                'logTypes' => $logTypes,
-                'selectedLogTypeId' => $selectedLogTypeId,
-                'now' => $now,
-                'inputs' => $inputs,
-            ]
-        );
     }
 }

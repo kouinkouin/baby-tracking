@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
@@ -67,10 +68,16 @@ class BabyLogLineController extends AbstractController
 
             $babyLogLine->setBaby($baby);
 
-            $errors = $this->validator->validate($babyLogLine);
+            $constraintViolationList = $this->validator->validate($babyLogLine);
 
-            if (count($errors) > 0) {
-                return $this->json($errors, Response::HTTP_BAD_REQUEST);
+            if ($constraintViolationList->count()) {
+                $errors = [];
+                /** @var ConstraintViolationInterface $violation */
+                foreach ($constraintViolationList as $violation) {
+                    $errors[] = $violation->getMessage();
+                }
+
+                return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
             }
             $this->em->persist($babyLogLine);
             $this->em->flush();
