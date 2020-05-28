@@ -69,7 +69,7 @@
                         </b-form-group>
                     </div>
                     <div v-else-if="input.type === 'range'">
-                        <label :for="input.name">{{input.text}}: {{ model[input.name] }} {{ input.unit }}</label>
+                        <label :for="input.name">{{input.text}}: {{ model.inputs[input.name] }} {{ input.unit }}</label>
                         <b-form-input
                                 :id="input.name"
                                 v-model="model.inputs[input.name]"
@@ -146,7 +146,6 @@
                 for (const input of this.inputs[this.model.logTypeId]) {
                     finalInputs[input.name] = this.model.inputs[input.name];
                 }
-                console.log(finalInputs);
 
                 await this.$store
                         .dispatch('log/postLog', {
@@ -155,20 +154,25 @@
                             datetime: this.model.when,
                             inputs: finalInputs
                         })
-                        .then(() => {
-                            for (const input of this.inputs[this.model.logTypeId]) {
-                                this.model.inputs[input.name] = null;
-                            }
-                            this.showSuccessAlert = true;
-                            this.isSubmitting = false;
-                        })
-                        .catch((e) => {
-                            this.errorMessage = e.response.data.message;
-                            this.showDangerAlert = true;
-                            this.isSubmitting = false;
-                        })
+                        .then(() => this.showSuccess())
+                        .then(() => this.initForm())
+                        .catch((e) => this.showError(e))
                 ;
             },
+            showSuccess() {
+                this.showSuccessAlert = true;
+            },
+            initForm() {
+                for (const input of this.inputs[this.model.logTypeId]) {
+                    this.model.inputs[input.name] = null;
+                }
+                this.isSubmitting = false;
+            },
+            showError(e) {
+                this.errorMessage = e.response.data.message;
+                this.showDangerAlert = true;
+                this.isSubmitting = false;
+            }
         }
     };
 </script>
