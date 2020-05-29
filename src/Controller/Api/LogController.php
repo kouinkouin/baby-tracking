@@ -56,15 +56,15 @@ class LogController extends AbstractController
 
         $selectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
 
-        $now = (new DateTimeImmutable)->format(self::FORMAT_DATETIME_LOCAL);
+        $when = (new DateTimeImmutable)->format(self::FORMAT_DATETIME_LOCAL);
 
         return $this->json(
             [
                 'babies' => $babies,
-                'selectedBabyId' => $selectedBabyId,
-                'logTypes' => $this->getLogTypes(),
-                'selectedLogTypeId' => $selectedLogTypeId,
-                'now' => $now,
+                'babyId' => $selectedBabyId,
+                'types' => $this->getLogTypes(),
+                'typeId' => $selectedLogTypeId,
+                'when' => $when,
                 'inputs' => $this->getInputs(),
             ]
         );

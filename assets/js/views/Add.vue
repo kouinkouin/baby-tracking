@@ -21,23 +21,23 @@
         </b-form-group>
 
         <b-form-group label="Quand ?">
-            <b-form-input type="datetime-local" name="datetime" v-model="model.now" required="required"/>
+            <b-form-input type="datetime-local" name="when" v-model="model.when" required="required"/>
         </b-form-group>
 
         <b-form-group label="Quoi ?">
             <b-form-radio-group
-                    v-model="model.logTypeId"
+                    v-model="model.typeId"
                     buttons
                     button-variant="outline-primary"
                     size="lg"
-                    name="log_type"
-                    :options="logTypes"
+                    name="type"
+                    :options="types"
                     required="required"
             />
         </b-form-group>
 
         <div class="col-md-12" v-if="inputs">
-            <div v-for="input in inputs[model.logTypeId]">
+            <div v-for="input in inputs[model.typeId]">
                 <div>
                     <div v-if="input.type === 'number'">
                         <div class="input-group">
@@ -108,7 +108,7 @@
                 errorMessage: '',
                 model: {
                     babyId: null,
-                    logTypeId: null,
+                    typeId: null,
                     when: null,
                     inputs: []
                 },
@@ -118,8 +118,8 @@
             ...mapGetters('log', [
                 'babies',
                 'babyId',
-                'logTypes',
-                'logTypeId',
+                'types',
+                'typeId',
                 'when',
                 'inputs',
             ]),
@@ -130,7 +130,7 @@
             await this.$store.dispatch('log/loadAddFields');
 
             this.model.babyId = this.babyId;
-            this.model.logTypeId = this.logTypeId;
+            this.model.typeId = this.typeId;
             this.model.when = this.when;
 
             this.isLoading = false;
@@ -143,15 +143,15 @@
                 this.errorMessage = '';
 
                 const finalInputs = {};
-                for (const input of this.inputs[this.model.logTypeId]) {
+                for (const input of this.inputs[this.model.typeId]) {
                     finalInputs[input.name] = this.model.inputs[input.name];
                 }
 
                 await this.$store
                         .dispatch('log/postLog', {
                             babyId: this.model.babyId,
-                            logTypeId: this.model.logTypeId,
-                            datetime: this.model.when,
+                            typeId: this.model.typeId,
+                            when: this.model.when,
                             inputs: finalInputs
                         })
                         .then(() => this.showSuccess())
@@ -163,7 +163,7 @@
                 this.showSuccessAlert = true;
             },
             initForm() {
-                for (const input of this.inputs[this.model.logTypeId]) {
+                for (const input of this.inputs[this.model.typeId]) {
                     this.model.inputs[input.name] = null;
                 }
                 this.isSubmitting = false;

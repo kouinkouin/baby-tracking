@@ -2,16 +2,16 @@ import logApi from '../../api/log';
 
 const UPDATE_BABIES = 'UPDATE_BABIES';
 const UPDATE_BABY_ID = 'UPDATE_BABY_ID';
-const UPDATE_LOG_TYPES = 'UPDATE_LOG_TYPES';
-const UPDATE_LOG_TYPE_ID = 'UPDATE_LOG_TYPE_ID';
+const UPDATE_TYPES = 'UPDATE_TYPES';
+const UPDATE_TYPE_ID = 'UPDATE_TYPE_ID';
 const UPDATE_WHEN = 'UPDATE_WHEN';
 const UPDATE_INPUTS = 'UPDATE_INPUTS';
 
 const state = {
     babies: [],
     babyId: null,
-    logTypes: [],
-    logTypeId: null,
+    types: [],
+    typeId: null,
     when: null,
     inputs: null,
 };
@@ -22,14 +22,14 @@ const actions = {
             .then(result => {
                 commit(UPDATE_BABIES, result.babies);
                 commit(UPDATE_BABY_ID, result.babyId);
-                commit(UPDATE_LOG_TYPES, result.logTypes);
-                commit(UPDATE_LOG_TYPE_ID, result.logTypeId);
+                commit(UPDATE_TYPES, result.types);
+                commit(UPDATE_TYPE_ID, result.typeId);
                 commit(UPDATE_WHEN, result.when);
                 commit(UPDATE_INPUTS, result.inputs);
             });
     },
-    postLog({commit, dispatch}, {babyId, logTypeId, datetime, inputs}) {
-        return logApi.postLog(babyId, logTypeId, datetime, inputs);
+    postLog({commit, dispatch}, {babyId, typeId, when, inputs}) {
+        return logApi.postLog(babyId, typeId, when, inputs);
     }
 };
 
@@ -40,11 +40,11 @@ const getters = {
     babyId(state) {
         return state.babyId;
     },
-    logTypes(state) {
-        return state.logTypes;
+    types(state) {
+        return state.types;
     },
-    logTypeId(state) {
-        return state.logTypeId;
+    typeId(state) {
+        return state.typeId;
     },
     when(state) {
         return state.when;
@@ -61,11 +61,11 @@ const mutations = {
     [UPDATE_BABY_ID](state, value) {
         state.babyId = value;
     },
-    [UPDATE_LOG_TYPES](state, value) {
-        state.logTypes = value;
+    [UPDATE_TYPES](state, value) {
+        state.types = value;
     },
-    [UPDATE_LOG_TYPE_ID](state, value) {
-        state.logTypeId = value;
+    [UPDATE_TYPE_ID](state, value) {
+        state.typeId = value;
     },
     [UPDATE_WHEN](state, value) {
         state.when = value;

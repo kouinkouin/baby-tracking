@@ -7,12 +7,12 @@ export default {
             .then(resp => resp.data)
             ;
     },
-    postLog(babyId, logTypeId, datetime, inputs) {
-        console.log(babyId, logTypeId, datetime, inputs)
+    postLog(babyId, typeId, when, inputs) {
+        console.log(babyId, typeId, when, inputs)
         return axios
             .post('/api/baby/' + babyId + '/logline', {
-                'creationDatetime': datetime,
-                'typeId': logTypeId,
+                'when': when,
+                'typeId': typeId,
                 'data': inputs,
             })
             .then(resp => resp.data)

@@ -28,11 +28,11 @@ class BabyLogLine
     private ?Baby $baby;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime_immutable", name="when_dt")
      *
      * @Assert\NotBlank()
      */
-    private ?DateTimeImmutable $creationDatetime;
+    private ?DateTimeImmutable $when;
 
     /**
      * @ORM\Column(type="smallint")
@@ -65,14 +65,14 @@ class BabyLogLine
         return $this;
     }
 
-    public function getCreationDatetime(): ?DateTimeImmutable
+    public function getWhen(): ?DateTimeImmutable
     {
-        return $this->creationDatetime;
+        return $this->when;
     }
 
-    public function setCreationDatetime(DateTimeImmutable $creationDatetime): self
+    public function setWhen(DateTimeImmutable $when): self
     {
-        $this->creationDatetime = $creationDatetime;
+        $this->when = $when;
 
         return $this;
     }
