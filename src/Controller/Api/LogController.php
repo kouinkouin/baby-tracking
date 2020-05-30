@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Repository\BabyLogLineRepository;
 use App\Services\Helper\UserHelper;
 use DateTimeImmutable;
+use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,7 +57,8 @@ class LogController extends AbstractController
 
         $selectedLogTypeId = $lastBabyLogLine ? $lastBabyLogLine->getTypeId() : 1;
 
-        $when = (new DateTimeImmutable)->format(self::FORMAT_DATETIME_LOCAL);
+        $timezone = new DateTimeZone('Europe/Brussels');
+        $when = (new DateTimeImmutable('now', $timezone))->format(self::FORMAT_DATETIME_LOCAL);
 
         return $this->json(
             [
