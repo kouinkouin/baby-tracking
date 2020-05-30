@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Repository\BabyLogLineRepository;
+use App\Services\Helper\LogTypeHelper;
 use App\Services\Helper\UserHelper;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -21,12 +22,16 @@ class LogController extends AbstractController
 
     private BabyLogLineRepository $babyLogLineRepository;
 
+    private LogTypeHelper $logTypeHelper;
+
     public function __construct(
         UserHelper $userHelper,
-        BabyLogLineRepository $babyLogLineRepository
+        BabyLogLineRepository $babyLogLineRepository,
+        LogTypeHelper $logTypeHelper
     ) {
         $this->userHelper = $userHelper;
         $this->babyLogLineRepository = $babyLogLineRepository;
+        $this->logTypeHelper = $logTypeHelper;
     }
 
     /**
@@ -64,116 +69,11 @@ class LogController extends AbstractController
             [
                 'babies' => $babies,
                 'babyId' => $selectedBabyId,
-                'types' => $this->getLogTypes(),
+                'types' => $this->logTypeHelper->getAll(),
                 'typeId' => $selectedLogTypeId,
                 'when' => $when,
-                'inputs' => $this->getInputs(),
+                'inputs' => $this->logTypeHelper->getInputs(),
             ]
         );
-    }
-
-    private function getLogTypes(): array
-    {
-        $logTypes = [
-            1 => ['name' => 'Poids', 'icon' => 'fa-weight'],
-            2 => ['name' => 'Taille', 'icon' => 'fa-ruler-combined'],
-            3 => ['name' => 'Température', 'icon' => 'fa-thermometer'],
-            4 => ['name' => 'Tétée', 'icon' => 'fa-lemon'],
-            5 => ['name' => 'Change', 'icon' => 'fa-toilet'],
-        ];
-        foreach (array_keys($logTypes) as $logTypeId) {
-            $logType = $logTypes[$logTypeId];
-            $logTypes[$logTypeId]['value'] = $logTypeId;
-            $logTypes[$logTypeId]['html'] = sprintf('<i class="fas fa-fw %s"></i>', $logType['icon']);
-            unset($logTypes[$logTypeId]['icon']);
-        }
-
-        return $logTypes;
-    }
-
-    private function getInputs(): array
-    {
-        return [
-            1 => [
-                ['name' => 'weight', 'text' => 'Poids', 'unit' => 'kg', 'type' => 'number'],
-            ],
-            2 => [
-                ['name' => 'size', 'text' => 'Taille', 'unit' => 'cm', 'type' => 'number'],
-            ],
-            3 => [
-                ['name' => 'temperature', 'text' => 'Température', 'unit' => '°C', 'type' => 'number'],
-            ],
-            4 => [
-                [
-                    'name' => 'duration',
-                    'text' => 'Durée',
-                    'type' => 'range',
-                    'unit' => 'minutes',
-                    'min' => 0,
-                    'max' => 20,
-                ],
-                [
-                    'name' => 'side',
-                    'text' => 'Côté',
-                    'type' => 'radio',
-                    'choices' => [
-                        ['text' => 'Gauche', 'value' => 'left'],
-                        ['text' => 'Droit', 'value' => 'right'],
-                        ['text' => 'Les deux', 'value' => 'both'],
-                    ],
-                ],
-                [
-                    'name' => 'end',
-                    'text' => 'Fin',
-                    'type' => 'radio',
-                    'choices' => [
-                        ['text' => 'Assoupi', 'value' => 1],
-                        ['text' => 'Eveillé', 'value' => 2],
-                    ],
-                ],
-                [
-                    'name' => 'regurgitation',
-                    'text' => 'Régurgitation',
-                    'type' => 'radio',
-                    'choices' => [
-                        ['text' => 'Non', 'value' => 0],
-                        ['text' => 'Oui', 'value' => 1],
-                    ],
-                ],
-            ],
-            5 => [
-                [
-                    'name' => 'poo',
-                    'text' => 'Caca',
-                    'type' => 'radio',
-                    'choices' => [
-                        ['html' => '<i class="fas fa-fw fa-battery-empty"></i>', 'value' => 0],
-                        ['html' => '<i class="fas fa-fw fa-battery-quarter"></i>', 'value' => 1],
-                        ['html' => '<i class="fas fa-fw fa-battery-half"></i>', 'value' => 2],
-                        ['html' => '<i class="fas fa-fw fa-battery-three-quarters"></i>', 'value' => 3],
-                        ['html' => '<i class="fas fa-fw fa-battery-full"></i>', 'value' => 4],
-                        ['html' => '<i class="fas fa-fw fa-fire"></i>', 'value' => 5],
-                    ],
-                ],
-                [
-                    'name' => 'pee',
-                    'text' => 'Pipi',
-                    'type' => 'radio',
-                    'choices' => [
-                        ['html' => '<i class="fas fa-fw fa-tint-slash"></i>', 'value' => 0],
-                        ['html' => '<i class="fas fa-fw fa-tint"></i>', 'value' => 1],
-                    ],
-                ],
-                [
-                    'name' => 'regurgitation',
-                    'text' => 'Régurgitation',
-                    'type' => 'radio',
-                    'choices' => [
-                        ['text' => 'Non', 'value' => 0],
-                        ['text' => 'Oui', 'value' => 1],
-                    ],
-                ],
-            ],
-        ];
     }
 }
