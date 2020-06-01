@@ -5,6 +5,7 @@
         "php": "^7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-json": "^7.4",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "5.0.*",
