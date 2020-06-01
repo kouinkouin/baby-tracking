@@ -36,16 +36,16 @@ class LogTypeHelper
     {
         return [
             self::ID_WEIGHT => [
-                ['name' => 'weight', 'text' => 'Poids', 'unit' => 'kg', 'type' => 'number'],
+                'weight' => ['name' => 'weight', 'text' => 'Poids', 'unit' => 'kg', 'type' => 'number'],
             ],
             self::ID_SIZE => [
-                ['name' => 'size', 'text' => 'Taille', 'unit' => 'cm', 'type' => 'number'],
+                'size' => ['name' => 'size', 'text' => 'Taille', 'unit' => 'cm', 'type' => 'number'],
             ],
             self::ID_TEMPERATURE => [
-                ['name' => 'temperature', 'text' => 'Température', 'unit' => '°C', 'type' => 'number'],
+                'temperature' => ['name' => 'temperature', 'text' => 'Température', 'unit' => '°C', 'type' => 'number'],
             ],
             self::ID_BREAST_FEED => [
-                [
+                'duration' => [
                     'name' => 'duration',
                     'text' => 'Durée',
                     'type' => 'range',
@@ -53,65 +53,65 @@ class LogTypeHelper
                     'min' => 0,
                     'max' => 20,
                 ],
-                [
+                'side' => [
                     'name' => 'side',
                     'text' => 'Côté',
                     'type' => 'radio',
                     'choices' => [
-                        ['text' => 'Gauche', 'value' => 'left'],
-                        ['text' => 'Droit', 'value' => 'right'],
-                        ['text' => 'Les deux', 'value' => 'both'],
+                        'left' => ['text' => 'Gauche', 'value' => 'left'],
+                        'right' => ['text' => 'Droit', 'value' => 'right'],
+                        'both' => ['text' => 'Les deux', 'value' => 'both'],
                     ],
                 ],
-                [
+                'end' => [
                     'name' => 'end',
                     'text' => 'Fin',
                     'type' => 'radio',
                     'choices' => [
-                        ['text' => 'Assoupi', 'value' => 1],
-                        ['text' => 'Eveillé', 'value' => 2],
+                        1 => ['text' => 'Assoupi', 'value' => 1],
+                        2 => ['text' => 'Eveillé', 'value' => 2],
                     ],
                 ],
-                [
+                'regurgitation' => [
                     'name' => 'regurgitation',
                     'text' => 'Régurgitation',
                     'type' => 'radio',
                     'choices' => [
-                        ['text' => 'Non', 'value' => 0],
-                        ['text' => 'Oui', 'value' => 1],
+                        0 => ['text' => 'Non', 'value' => 0],
+                        1 => ['text' => 'Oui', 'value' => 1],
                     ],
                 ],
             ],
             self::ID_CHANGE => [
-                [
+                'poo' => [
                     'name' => 'poo',
                     'text' => 'Caca',
                     'type' => 'radio',
                     'choices' => [
-                        ['html' => '<i class="fas fa-fw fa-battery-empty"></i>', 'value' => 0],
-                        ['html' => '<i class="fas fa-fw fa-battery-quarter"></i>', 'value' => 1],
-                        ['html' => '<i class="fas fa-fw fa-battery-half"></i>', 'value' => 2],
-                        ['html' => '<i class="fas fa-fw fa-battery-three-quarters"></i>', 'value' => 3],
-                        ['html' => '<i class="fas fa-fw fa-battery-full"></i>', 'value' => 4],
-                        ['html' => '<i class="fas fa-fw fa-fire"></i>', 'value' => 5],
+                        0 => ['html' => '<i class="fas fa-fw fa-battery-empty"></i>', 'value' => 0],
+                        1 => ['html' => '<i class="fas fa-fw fa-battery-quarter"></i>', 'value' => 1],
+                        2 => ['html' => '<i class="fas fa-fw fa-battery-half"></i>', 'value' => 2],
+                        3 => ['html' => '<i class="fas fa-fw fa-battery-three-quarters"></i>', 'value' => 3],
+                        4 => ['html' => '<i class="fas fa-fw fa-battery-full"></i>', 'value' => 4],
+                        5 => ['html' => '<i class="fas fa-fw fa-fire"></i>', 'value' => 5],
                     ],
                 ],
-                [
+                'pee' => [
                     'name' => 'pee',
                     'text' => 'Pipi',
                     'type' => 'radio',
                     'choices' => [
-                        ['html' => '<i class="fas fa-fw fa-tint-slash"></i>', 'value' => 0],
-                        ['html' => '<i class="fas fa-fw fa-tint"></i>', 'value' => 1],
+                        0 => ['html' => '<i class="fas fa-fw fa-tint-slash"></i>', 'value' => 0],
+                        1 => ['html' => '<i class="fas fa-fw fa-tint"></i>', 'value' => 1],
                     ],
                 ],
-                [
+                'regurgitation' => [
                     'name' => 'regurgitation',
                     'text' => 'Régurgitation',
                     'type' => 'radio',
                     'choices' => [
-                        ['text' => 'Non', 'value' => 0],
-                        ['text' => 'Oui', 'value' => 1],
+                        0 => ['text' => 'Non', 'value' => 0],
+                        1 => ['text' => 'Oui', 'value' => 1],
                     ],
                 ],
             ],

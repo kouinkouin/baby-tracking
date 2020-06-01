@@ -46,17 +46,18 @@
             <h4>Dernière entrée</h4>
             <div v-if="lastUpdates[model.babyId][model.typeId]" class="mb-3">
                 <ul>
-                    <li>Quand: {{ lastUpdates[model.babyId][model.typeId].when}}</li>
-                    <li v-for="(input, key) in lastUpdates[model.babyId][model.typeId].inputs">
-                        {{ key }} : {{ input }}
+                    <li><strong>Quand:</strong> {{ lastUpdates[model.babyId][model.typeId].when}}</li>
+                    <li v-for="(value, inputKey) in lastUpdates[model.babyId][model.typeId].inputs">
+                        <strong>{{ inputs[model.typeId][inputKey].text }} :</strong>
+                        <span v-html="getInputLastValue(value, inputKey)"></span>
                     </li>
                 </ul>
             </div>
             <div v-else class="mb-3 font-italic">
-                Aucune entrée pour {{ types[model.typeId].name }} chez {{ babies[babyId].text }}
+                Aucune entrée "{{ types[model.typeId].name }}" pour {{ babies[babyId].text }}
             </div>
 
-            <div v-for="input in inputs[model.typeId]">
+            <div v-for="(input, key) in inputs[model.typeId]">
                 <div>
                     <div v-if="input.type === 'number'">
                         <div class="input-group mb-3">
@@ -64,11 +65,11 @@
                                 <span class="input-group-text">{{ input.text }}</span>
                             </div>
                             <b-form-input
-                                    :name="input.name"
+                                    :name="key"
                                     step="any"
                                     type="number"
                                     required="required"
-                                    v-model="model.inputs[input.name]"
+                                    v-model="model.inputs[key]"
                             />
                             <div class="input-group-append" v-if="input.unit">
                                 <span class="input-group-text">{{ input.unit }}</span>
@@ -80,21 +81,21 @@
                             <b-form-radio-group
                                     buttons
                                     button-variant="outline-secondary"
-                                    :name="input.name"
+                                    :name="key"
                                     :options="input.choices"
                                     required="required"
-                                    v-model="model.inputs[input.name]"
+                                    v-model="model.inputs[key]"
                             />
                         </b-form-group>
                     </div>
                     <div v-else-if="input.type === 'range'">
                         <div class="input-group mb-3">
-                            <label :for="input.name">
-                                {{input.text}}: {{ model.inputs[input.name] }} {{ input.unit}}
+                            <label :for="key">
+                                {{input.text}}: {{ model.inputs[key] }} {{ input.unit}}
                             </label>
                             <b-form-input
-                                    :id="input.name"
-                                    v-model="model.inputs[input.name]"
+                                    :id="key"
+                                    v-model="model.inputs[key]"
                                     type="range"
                                     required="required"
                                     :min="input.min"
@@ -167,8 +168,11 @@
                 this.errorMessage = '';
 
                 const finalInputs = {};
-                for (const input of this.inputs[this.model.typeId]) {
-                    finalInputs[input.name] = this.model.inputs[input.name];
+                for (const inputKey in this.inputs[this.model.typeId]) {
+                    if (!this.inputs[this.model.typeId].hasOwnProperty(inputKey)) {
+                        continue;
+                    }
+                    finalInputs[inputKey] = this.model.inputs[inputKey];
                 }
 
                 await this.$store
@@ -187,8 +191,11 @@
                 this.showSuccessAlert = true;
             },
             initForm() {
-                for (const input of this.inputs[this.model.typeId]) {
-                    this.model.inputs[input.name] = null;
+                for (const inputKey in this.inputs[this.model.typeId]) {
+                    if (!this.inputs[this.model.typeId].hasOwnProperty(inputKey)) {
+                        continue;
+                    }
+                    this.model.inputs[inputKey] = null;
                 }
                 this.isSubmitting = false;
             },
@@ -196,6 +203,17 @@
                 this.errorMessage = e.response.data.message;
                 this.showDangerAlert = true;
                 this.isSubmitting = false;
+            },
+            getInputLastValue(value, inputKey) {
+                const input = this.inputs[this.model.typeId][inputKey];
+                switch (input.type) {
+                    case 'number':
+                    case 'range':
+                        return value + ' ' + (input.unit || '');
+                    case 'radio':
+                        const inputValue = input.choices[value];
+                        return inputValue.html || inputValue.text;
+                }
             }
         }
     };
