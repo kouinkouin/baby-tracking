@@ -184,6 +184,7 @@
                         })
                         .then(() => this.showSuccess())
                         .then(() => this.initForm())
+                        .then(() => this.$store.dispatch('log/loadAddFields'))
                         .catch((e) => this.showError(e))
                 ;
             },
