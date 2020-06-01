@@ -25,6 +25,7 @@
                     type="datetime-local"
                     name="when"
                     v-model="model.when"
+                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                     required="required"
             />
         </b-form-group>
