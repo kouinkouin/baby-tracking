@@ -42,7 +42,7 @@
             />
         </b-form-group>
 
-        <div class="col-md-12" v-if="inputs">
+        <div v-if="inputs">
             <h4>Dernière entrée</h4>
             <div v-if="lastUpdates[model.babyId][model.typeId]" class="mb-3">
                 <ul>
