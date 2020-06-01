@@ -46,7 +46,7 @@
             <div v-for="input in inputs[model.typeId]">
                 <div>
                     <div v-if="input.type === 'number'">
-                        <div class="input-group">
+                        <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">{{ input.text }}</span>
                             </div>
@@ -75,15 +75,19 @@
                         </b-form-group>
                     </div>
                     <div v-else-if="input.type === 'range'">
-                        <label :for="input.name">{{input.text}}: {{ model.inputs[input.name] }} {{ input.unit }}</label>
-                        <b-form-input
-                                :id="input.name"
-                                v-model="model.inputs[input.name]"
-                                type="range"
-                                required="required"
-                                :min="input.min"
-                                :max="input.max"
-                        />
+                        <div class="input-group mb-3">
+                            <label :for="input.name">
+                                {{input.text}}: {{ model.inputs[input.name] }} {{ input.unit}}
+                            </label>
+                            <b-form-input
+                                    :id="input.name"
+                                    v-model="model.inputs[input.name]"
+                                    type="range"
+                                    required="required"
+                                    :min="input.min"
+                                    :max="input.max"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
