@@ -69,8 +69,10 @@ class LogController extends AbstractController
 
         $lastUpdates = [];
         foreach ($lastUpdatesLines as $lastUpdatesLine) {
+            /** @var DateTimeImmutable $when */
+            $when = $lastUpdatesLine['when'];
             $lastUpdates[$lastUpdatesLine['baby_id']][$lastUpdatesLine['typeId']] = [
-                'when' => $lastUpdatesLine['when'],
+                'when' => $when->format('d/m/Y H:i'),
                 'inputs' => $lastUpdatesLine['data'],
             ];
         }

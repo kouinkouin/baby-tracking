@@ -1,35 +1,30 @@
 <template>
     <form method="post">
-        <b-alert v-model="showSuccessAlert" variant="success" dismissible>
-            Sauvé !
-        </b-alert>
-
-        <b-alert v-model="showDangerAlert" variant="danger" dismissible>
-            Oups... une erreur :<br>
-            {{ this.errorMessage }}
-        </b-alert>
-
-        <b-form-group label="Qui ?">
-            <b-form-radio-group
-                    v-model="model.babyId"
-                    buttons
-                    button-variant="outline-primary"
-                    name="baby"
-                    :options="babies"
-                    required="required"
-            />
-        </b-form-group>
-
-        <b-form-group label="Quand ?">
-            <b-form-input
-                    type="datetime-local"
-                    name="when"
-                    v-model="model.when"
-                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                    required="required"
-            />
-        </b-form-group>
-
+        <b-row>
+            <b-col cols="5">
+                <b-form-group label="Qui ?">
+                    <b-form-radio-group
+                            v-model="model.babyId"
+                            buttons
+                            button-variant="outline-primary"
+                            name="baby"
+                            :options="babies"
+                            required="required"
+                    />
+                </b-form-group>
+            </b-col>
+            <b-col col="7">
+                <b-form-group label="Quand ?">
+                    <b-form-input
+                            type="datetime-local"
+                            name="when"
+                            v-model="model.when"
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                            required="required"
+                    />
+                </b-form-group>
+            </b-col>
+        </b-row>
         <b-form-group label="Quoi ?">
             <b-form-radio-group
                     v-model="model.typeId"
@@ -43,14 +38,17 @@
         </b-form-group>
 
         <div v-if="inputs">
-            <h4>Dernière entrée</h4>
             <div v-if="lastUpdates[model.babyId][model.typeId]" class="mb-3">
+                <strong>Dernière entrée :</strong> {{ lastUpdates[model.babyId][model.typeId].when}}
+                <i v-b-toggle.last-update-collapse class="fas fa-fw fa-caret-square-down text-primary"></i>
                 <ul>
-                    <li><strong>Quand:</strong> {{ lastUpdates[model.babyId][model.typeId].when}}</li>
-                    <li v-for="(value, inputKey) in lastUpdates[model.babyId][model.typeId].inputs">
-                        <strong>{{ inputs[model.typeId][inputKey].text }} :</strong>
-                        <span v-html="getInputLastValue(value, inputKey)"></span>
-                    </li>
+                    <b-collapse id="last-update-collapse">
+                        <li v-for="(value, inputKey) in lastUpdates[model.babyId][model.typeId].inputs"
+                            v-if="inputs[model.typeId][inputKey]">
+                            <strong>{{ inputs[model.typeId][inputKey].text }} :</strong>
+                            <span v-html="getInputLastValue(value, inputKey)"></span>
+                        </li>
+                    </b-collapse>
                 </ul>
             </div>
             <div v-else class="mb-3 font-italic">
@@ -106,6 +104,15 @@
                 </div>
             </div>
         </div>
+
+        <b-alert v-model="showSuccessAlert" variant="success" dismissible>
+            Sauvé !
+        </b-alert>
+
+        <b-alert v-model="showDangerAlert" variant="danger" dismissible>
+            Oups... une erreur :<br>
+            {{ this.errorMessage }}
+        </b-alert>
 
         <button
                 class="btn btn-primary"
