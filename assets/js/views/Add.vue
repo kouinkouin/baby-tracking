@@ -21,7 +21,12 @@
         </b-form-group>
 
         <b-form-group label="Quand ?">
-            <b-form-input type="datetime-local" name="when" v-model="model.when" required="required"/>
+            <b-form-input
+                    type="datetime-local"
+                    name="when"
+                    v-model="model.when"
+                    required="required"
+            />
         </b-form-group>
 
         <b-form-group label="Quoi ?">

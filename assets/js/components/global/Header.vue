@@ -7,7 +7,7 @@
 
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
-                    <b-nav-item :to="{name:'home'}">Home</b-nav-item>
+                    <b-nav-item :to="{name: 'home'}">Home</b-nav-item>
                     <b-nav-item :to="{name: 'add'}">Add</b-nav-item>
                 </b-navbar-nav>
             </b-collapse>
