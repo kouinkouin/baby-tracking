@@ -43,6 +43,19 @@
         </b-form-group>
 
         <div class="col-md-12" v-if="inputs">
+            <h4>Dernière entrée</h4>
+            <div v-if="lastUpdates[model.babyId][model.typeId]" class="mb-3">
+                <ul>
+                    <li>Quand: {{ lastUpdates[model.babyId][model.typeId].when}}</li>
+                    <li v-for="(input, key) in lastUpdates[model.babyId][model.typeId].inputs">
+                        {{ key }} : {{ input }}
+                    </li>
+                </ul>
+            </div>
+            <div v-else class="mb-3 font-italic">
+                Aucune entrée pour {{ types[model.typeId].name }} chez {{ babies[babyId].text }}
+            </div>
+
             <div v-for="input in inputs[model.typeId]">
                 <div>
                     <div v-if="input.type === 'number'">
@@ -132,6 +145,7 @@
                 'typeId',
                 'when',
                 'inputs',
+                'lastUpdates',
             ]),
         },
         async created() {

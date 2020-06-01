@@ -65,6 +65,16 @@ class LogController extends AbstractController
         $timezone = new DateTimeZone('Europe/Brussels');
         $when = (new DateTimeImmutable('now', $timezone))->format(self::FORMAT_DATETIME_LOCAL);
 
+        $lastUpdatesLines = $this->babyLogLineRepository->findLastOnesGroupedByBabyAndTypeId($user);
+
+        $lastUpdates = [];
+        foreach ($lastUpdatesLines as $lastUpdatesLine) {
+            $lastUpdates[$lastUpdatesLine['baby_id']][$lastUpdatesLine['typeId']] = [
+                'when' => $lastUpdatesLine['when'],
+                'inputs' => $lastUpdatesLine['data'],
+            ];
+        }
+
         return $this->json(
             [
                 'babies' => $babies,
@@ -73,6 +83,7 @@ class LogController extends AbstractController
                 'typeId' => $selectedLogTypeId,
                 'when' => $when,
                 'inputs' => $this->logTypeHelper->getInputs(),
+                'lastUpdates' => $lastUpdates,
             ]
         );
     }

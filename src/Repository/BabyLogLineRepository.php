@@ -31,4 +31,12 @@ class BabyLogLineRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
             ;
     }
+
+    public function findLastOnesGroupedByBabyAndTypeId(User $user): array
+    {
+        return $this->createNativeNamedQuery('lastOnes')
+            ->setParameter('user_id', $user->getId())
+            ->getArrayResult()
+            ;
+    }
 }

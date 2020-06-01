@@ -9,6 +9,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BabyLogLineRepository::class)
+ * @ORM\NamedNativeQueries({@ORM\NamedNativeQuery(name="lastOnes", resultClass="BabyLogLine", query="
+SELECT bll1.*
+FROM baby_log_line bll1
+JOIN baby b ON bll1.baby_id = b.id
+JOIN (
+SELECT bll.baby_id, bll.type_id, MAX(bll.when_dt) AS when_dt
+FROM baby_log_line bll
+GROUP BY bll.baby_id, bll.type_id
+) AS bll0 ON bll0.baby_id = bll1.baby_id AND bll0.type_id = bll1.type_id AND bll0.when_dt = bll1.when_dt
+WHERE b.user_id = :user_id
+")})
  */
 class BabyLogLine
 {

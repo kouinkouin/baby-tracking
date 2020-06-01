@@ -6,6 +6,7 @@ const UPDATE_TYPES = 'UPDATE_TYPES';
 const UPDATE_TYPE_ID = 'UPDATE_TYPE_ID';
 const UPDATE_WHEN = 'UPDATE_WHEN';
 const UPDATE_INPUTS = 'UPDATE_INPUTS';
+const UPDATE_LAST_UPDATES = 'UPDATE_LAST_UPDATES';
 
 const state = {
     babies: [],
@@ -14,6 +15,7 @@ const state = {
     typeId: null,
     when: null,
     inputs: null,
+    lastUpdates: [],
 };
 
 const actions = {
@@ -26,6 +28,7 @@ const actions = {
                 commit(UPDATE_TYPE_ID, result.typeId);
                 commit(UPDATE_WHEN, result.when);
                 commit(UPDATE_INPUTS, result.inputs);
+                commit(UPDATE_LAST_UPDATES, result.lastUpdates);
             });
     },
     postLog({commit, dispatch}, {babyId, typeId, when, inputs}) {
@@ -52,6 +55,9 @@ const getters = {
     inputs(state) {
         return state.inputs;
     },
+    lastUpdates(state) {
+        return state.lastUpdates;
+    },
 };
 
 const mutations = {
@@ -72,6 +78,9 @@ const mutations = {
     },
     [UPDATE_INPUTS](state, value) {
         state.inputs = value;
+    },
+    [UPDATE_LAST_UPDATES](state, value) {
+        state.lastUpdates = value;
     },
 };
 
