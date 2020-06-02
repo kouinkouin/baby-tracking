@@ -6,6 +6,7 @@ use App\Entity\Baby;
 use App\Entity\BabyLogLine;
 use App\Repository\BabyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,8 @@ class BabyLogLineController extends AbstractController
 {
     private EntityManagerInterface $em;
 
+    private LoggerInterface $logger;
+
     private BabyRepository $babyRepository;
 
     private ValidatorInterface $validator;
@@ -27,11 +30,13 @@ class BabyLogLineController extends AbstractController
 
     public function __construct(
         EntityManagerInterface $em,
+        LoggerInterface $logger,
         BabyRepository $babyRepository,
         ValidatorInterface $validator,
         SerializerInterface $serializer
     ) {
         $this->em = $em;
+        $this->logger = $logger;
         $this->babyRepository = $babyRepository;
         $this->validator = $validator;
         $this->serializer = $serializer;
@@ -84,15 +89,15 @@ class BabyLogLineController extends AbstractController
 
             return $this->json($babyLogLine);
         } catch (Throwable $e) {
-            return $this->json(
-                [
-                    'code' => $e->getCode(),
-                    'message' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            $context = [
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ];
+            $this->logger->error($e->getMessage(), $context);
+
+            return $this->json($context, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
