@@ -37,7 +37,8 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Baby::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity=Baby::class, inversedBy="users")
+     * @ORM\JoinTable(name="map_user_baby")
      */
     private $babies;
 
@@ -131,7 +132,6 @@ class User implements UserInterface
     {
         if (!$this->babies->contains($baby)) {
             $this->babies[] = $baby;
-            $baby->setUser($this);
         }
 
         return $this;
@@ -141,10 +141,6 @@ class User implements UserInterface
     {
         if ($this->babies->contains($baby)) {
             $this->babies->removeElement($baby);
-            // set the owning side to null (unless already changed)
-            if ($baby->getUser() === $this) {
-                $baby->setUser(null);
-            }
         }
 
         return $this;

@@ -22,12 +22,6 @@ class Baby
     private ?string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="babies")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private ?User $user;
-
-    /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      */
@@ -44,26 +38,20 @@ class Baby
      */
     private Collection $logLines;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="babies")
+     */
+    private Collection $users;
+
     public function __construct()
     {
         $this->logLines = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?string
     {
         return $this->id;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -116,6 +104,34 @@ class Baby
             if ($logLine->getBaby() === $this) {
                 $logLine->setBaby(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addBaby($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            $user->removeBaby($this);
         }
 
         return $this;

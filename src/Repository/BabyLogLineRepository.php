@@ -24,7 +24,8 @@ class BabyLogLineRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('baby_log_line')
             ->join('baby_log_line.baby', 'baby')
-            ->where('baby.user = :user')
+            ->join('baby.users', 'user')
+            ->where('user = :user')
             ->setMaxResults(1)
             ->setParameter('user', $user)
             ->getQuery()
