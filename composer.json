@@ -33,6 +33,7 @@
         "symfony/yaml": "^5.0"
     },
     "require-dev": {
+        "jdorn/sql-formatter": "^1.2",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
