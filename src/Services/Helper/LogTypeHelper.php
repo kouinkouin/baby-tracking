@@ -9,6 +9,7 @@ class LogTypeHelper
     const ID_TEMPERATURE = 3;
     const ID_BREAST_FEED = 4;
     const ID_CHANGE = 5;
+    const ID_VOMIT = 6;
 
     private array $logTypes = [
         self::ID_WEIGHT => ['name' => 'Poids', 'icon' => 'fa-weight'],
@@ -16,6 +17,7 @@ class LogTypeHelper
         self::ID_TEMPERATURE => ['name' => 'Température', 'icon' => 'fa-thermometer'],
         self::ID_BREAST_FEED => ['name' => 'Tétée', 'icon' => 'fa-lemon'],
         self::ID_CHANGE => ['name' => 'Change', 'icon' => 'fa-toilet'],
+        self::ID_VOMIT => ['name' => 'Vomi', 'icon' => 'fa-splotch'],
     ];
 
     public function getAll(): array
@@ -112,6 +114,18 @@ class LogTypeHelper
                     'choices' => [
                         0 => ['text' => 'Non', 'value' => 0],
                         1 => ['text' => 'Oui', 'value' => 1],
+                    ],
+                ],
+            ],
+            self::ID_VOMIT => [
+                'vomit_degree' => [
+                    'name' => 'vomit_degree',
+                    'text' => 'Degré de vomi',
+                    'type' => 'radio',
+                    'choices' => [
+                        1 => ['text' => 'Petite régurgitation', 'value' => 1],
+                        2 => ['text' => 'Bonne régurgitation', 'value' => 2],
+                        3 => ['text' => 'Vomi', 'value' => 3],
                     ],
                 ],
             ],
