@@ -40,7 +40,7 @@ class LogController extends AbstractController
     public function fieldsForAdd(Request $request)
     {
         if (!$user = $this->userHelper->getUserFromRequest($request)) {
-            return $this->json(['errors' => ['you are not logged']], Response::HTTP_UNAUTHORIZED);
+            return $this->json(['errors' => ['you are not authenticated']], Response::HTTP_UNAUTHORIZED);
         }
         $babies = [];
         foreach ($user->getBabies() as $baby) {

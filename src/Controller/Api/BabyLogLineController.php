@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Baby;
 use App\Entity\BabyLogLine;
 use App\Repository\BabyRepository;
+use App\Services\Helper\UserHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,18 +29,22 @@ class BabyLogLineController extends AbstractController
 
     private SerializerInterface $serializer;
 
+    private UserHelper $userHelper;
+
     public function __construct(
         EntityManagerInterface $em,
         LoggerInterface $logger,
         BabyRepository $babyRepository,
         ValidatorInterface $validator,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        UserHelper $userHelper
     ) {
         $this->em = $em;
         $this->logger = $logger;
         $this->babyRepository = $babyRepository;
         $this->validator = $validator;
         $this->serializer = $serializer;
+        $this->userHelper = $userHelper;
     }
 
     /**
@@ -67,6 +72,12 @@ class BabyLogLineController extends AbstractController
      */
     public function add(Baby $baby, Request $request)
     {
+        if (!$user = $this->userHelper->getUserFromRequest($request)) {
+            return $this->json(['errors' => ['you are not authenticated']], Response::HTTP_UNAUTHORIZED);
+        }
+        if (!$user->getBabies()->contains($baby)) {
+            return $this->json(['errors' => ['it is not your baby']], Response::HTTP_FORBIDDEN);
+        }
         try {
             /** @var BabyLogLine $babyLogLine */
             $babyLogLine = $this->serializer->deserialize($request->getContent(), BabyLogLine::class, 'json');
