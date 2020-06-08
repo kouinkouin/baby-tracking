@@ -1,5 +1,5 @@
 <template>
-    <b-navbar variant="dark" type="dark">
+    <b-navbar variant="secondary" type="dark">
         <b-container>
             <b-navbar-brand href="#">Baby Tracker</b-navbar-brand>
 

@@ -21,6 +21,7 @@
                             v-model="model.when"
                             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                             required="required"
+                            class="bg-dark text-light"
                     />
                 </b-form-group>
             </b-col>
@@ -68,6 +69,7 @@
                                     type="number"
                                     required="required"
                                     v-model="model.inputs[key]"
+                                    class="bg-dark text-light"
                             />
                             <div class="input-group-append" v-if="input.unit">
                                 <span class="input-group-text">{{ input.unit }}</span>
@@ -78,7 +80,7 @@
                         <b-form-group :label="input.text">
                             <b-form-radio-group
                                     buttons
-                                    button-variant="outline-secondary"
+                                    button-variant="outline-light"
                                     :name="key"
                                     :options="input.choices"
                                     required="required"
